@@ -4,17 +4,35 @@ const util = require("util");
 const { response } = require("express");
 
 //Class for your notes
-var notes = [
-    {
-      routeName: "",
-      title: "",
-      text: "",
-    }
-]
+class Store {
+  constructor(routeName, title, id, text) {
+    this.routeName = routeName;
+    this.title = title;
+    this.id = id;
+    this.text = text;
+  }
 //Defined function that read, write, and delete
 
-var newNote = req.body;
-newNote.routeName = newNote.name.replace(/\s+/g, "").toLowerCase();
-console.log(newNote);
-notes.push(newNote);
-res.json(newNote);
+  getRouteName() {
+    return this.routeName;
+  }
+
+  getTitle() {
+    return this.title;
+  }
+
+  getID() {
+    return this.id;
+  }
+
+  getText() {
+    return this.text;
+  }
+
+
+
+
+
+
+  }
+module.exports = Store;

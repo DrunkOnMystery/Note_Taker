@@ -16,6 +16,10 @@ module.exports = function(app) {
 //POST route
   app.post("/api/notes", function (req, res) {
 
+    console.log(req.body);
+    
+
+
 
 // db.json.push(req.body);
 });
