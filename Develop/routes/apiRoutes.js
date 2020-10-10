@@ -3,25 +3,62 @@ const Store = require("../db/store");
 const uuid = require("uuid");
 const path = require("path");
 var app = require("express");
+const { fstat } = require("fs");
 
+
+let notesArray = [];
+let savedNotes = [];
 
 module.exports = function(app) {
 
 //GET route
 
-  app.get("/api/notes", function(req, res) {
-    store
-    .read()
-    .then((data) => JSON.parse(data))
-    .then((notes) => res.json(notes))
-    .catch((err) => res.status(500).json(err));
+  // app.get("/api/notes", function(req, res) {
+  //   Store
+  //   .read()
+  //   .then((data) => JSON.parse(data))
+  //   .then((notes) => res.json(notes))
+  //   .catch((err) => res.status(500).json(err));
+  //   });
+
+
+    app.get("/api.notes", function(req, res) {
+      savedNotes = [];
+      fs.readFile(outputPath, 'utf-8', (err, data) => {
+        if (err) throw err;
+        data = JSON.parse(data)
+        for (i=0, i < data.length; i++) {
+          savedNotes.push(data[i])
+        }
+        res.send(savedNotes)
+      })
     });
 
-
 //POST route
-  app.post("/api/notes", function (req, res) {
-      req.body.id = uuid.v1();
-    console.log(req.body);
+  // app.post("/api/notes", function (req, res) {
+  //     req.body.id = uuid.v1();
+  //   console.log(req.body);
+
+    app.post("/api/notes", function(req, res) {
+      notesArray = [];
+      notesArray.push(req.body);
+      fs.readFile(outputPath, 'utf-8', (err, data) => {
+        if (err) throw err;
+        data =JSON.parse(data)
+        for (i=0; i <data.length; i++) {
+          notesArray.push(data[i])
+        }
+
+        for(i=0; i < notesArray.length; i++) {
+          notesArray[i].id = i + 1;
+        }
+        res.send(notesArray);
+
+        fs.writeFile(outputPath, JSON.stringify(notesArray), function(err) {
+          
+        })
+      })
+    })
 
 
 
