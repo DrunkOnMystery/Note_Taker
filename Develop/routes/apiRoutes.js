@@ -1,30 +1,20 @@
-// const db = require("../db/db.json");
+//Create Const
 const Store = require("../db/store");
-// const uuid = require("uuid");
 const path = require("path");
-// var app = require("express");
 const fs = require("fs");
 
 const output_DIR = path.resolve(__dirname, "../db");
 const outputPath = path.join(output_DIR, "db.json");
 
-
+//create needed arrays
 let notesArray = [];
 let savedNotes = [];
 
+//Pull in function
 module.exports = function(app) {
 
-//GET route
 
-  // app.get("/api/notes", function(req, res) {
-  //   Store
-  //   .read()
-  //   .then((data) => JSON.parse(data))
-  //   .then((notes) => res.json(notes))
-  //   .catch((err) => res.status(500).json(err));
-  //   });
-
-
+  //get function
     app.get("/api/notes", function(req, res) {
       savedNotes = [];
       fs.readFile(outputPath, 'utf-8', (err, data) => {
@@ -33,16 +23,12 @@ module.exports = function(app) {
         for (i=0; i < data.length; i++) {
           savedNotes.push(data[i])
         }
-        // console.log(savedNotes);
+
         res.send(savedNotes)
       })
     });
 
-//POST route
-  // app.post("/api/notes", function (req, res) {
-  //     req.body.id = uuid.v1();
-  //   console.log(req.body);
-
+    //post function
     app.post("/api/notes", function(req, res) {
       notesArray = [];
       notesArray.push(req.body);
@@ -75,7 +61,7 @@ module.exports = function(app) {
 
 
 
-//DELETE
+//delete function
   app.delete("/api/notes/:id",  (req, res) => {
     notesArray = [];
     let noteId = req.params.id;
