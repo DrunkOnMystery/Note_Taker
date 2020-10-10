@@ -6,7 +6,7 @@ const path = require("path");
 const fs = require("fs");
 
 const output_DIR = path.resolve(__dirname, "../db");
-const outputPath = (output_DIR, "db.json");
+const outputPath = path.join(output_DIR, "db.json");
 
 
 let notesArray = [];
@@ -25,7 +25,7 @@ module.exports = function(app) {
   //   });
 
 
-    app.get("/api.notes", function(req, res) {
+    app.get("/api/notes", function(req, res) {
       savedNotes = [];
       fs.readFile(outputPath, 'utf-8', (err, data) => {
         if (err) throw err;
@@ -33,6 +33,7 @@ module.exports = function(app) {
         for (i=0; i < data.length; i++) {
           savedNotes.push(data[i])
         }
+        console.log(savedNotes);
         res.send(savedNotes)
       })
     });
@@ -72,7 +73,7 @@ module.exports = function(app) {
 
 
 
-};
+
 
 //DELETE
   app.delete("/api/notes", function (req, res){
@@ -84,13 +85,17 @@ module.exports = function(app) {
       notesArray = JSON.parse(data);
 
       const newNotesArray = notesArray.filter(note =>note.id != noteId);
-      fs.writeFile(outputPath, JSON.stringify(newNotesArray) + "\t", err => {
 
+      console.log(newNotesArray);
+      fs.writeFile(outputPath, JSON.stringify(newNotesArray) + "\t", err => {
+        if (err) throw err;
+        console.log("deleted");
+        res.send(newNotesArray)
       })
     })
 
 });
 
-
+};
 
 
