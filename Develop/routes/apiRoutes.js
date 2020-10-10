@@ -33,7 +33,7 @@ module.exports = function(app) {
         for (i=0; i < data.length; i++) {
           savedNotes.push(data[i])
         }
-        console.log(savedNotes);
+        // console.log(savedNotes);
         res.send(savedNotes)
       })
     });
@@ -76,18 +76,18 @@ module.exports = function(app) {
 
 
 //DELETE
-  app.delete("/api/notes", function (req, res){
+  app.delete("/api/notes/:id",  (req, res) => {
     notesArray = [];
-    let noteID = req.params.id;
-
+    let noteId = req.params.id;
+    console.log(noteId);
     fs.readFile(outputPath, "utf-8", (err, data) => {
       if (err) throw err;
       notesArray = JSON.parse(data);
 
-      const newNotesArray = notesArray.filter(note =>note.id != noteId);
+      const newNotesArray = notesArray.filter(note => note.id != noteId);
 
-      console.log(newNotesArray);
-      fs.writeFile(outputPath, JSON.stringify(newNotesArray) + "\t", err => {
+
+      fs.writeFile(outputPath, JSON.stringify(newNotesArray), err => {
         if (err) throw err;
         console.log("deleted");
         res.send(newNotesArray)
