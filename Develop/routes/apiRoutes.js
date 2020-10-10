@@ -1,9 +1,12 @@
-const db = require("../db/db.json");
+// const db = require("../db/db.json");
 const Store = require("../db/store");
-const uuid = require("uuid");
+// const uuid = require("uuid");
 const path = require("path");
-var app = require("express");
-const { fstat } = require("fs");
+// var app = require("express");
+const fs = require("fs");
+
+const output_DIR = path.resolve(__dirname, "../db");
+const outputPath = (output_DIR, "db.json");
 
 
 let notesArray = [];
@@ -27,7 +30,7 @@ module.exports = function(app) {
       fs.readFile(outputPath, 'utf-8', (err, data) => {
         if (err) throw err;
         data = JSON.parse(data)
-        for (i=0, i < data.length; i++) {
+        for (i=0; i < data.length; i++) {
           savedNotes.push(data[i])
         }
         res.send(savedNotes)
@@ -55,7 +58,12 @@ module.exports = function(app) {
         res.send(notesArray);
 
         fs.writeFile(outputPath, JSON.stringify(notesArray), function(err) {
-          
+          if (err) {
+            throw err;
+          }
+          else {
+            console.log("you did it");
+          }
         })
       })
     })
@@ -64,15 +72,25 @@ module.exports = function(app) {
 
 
 
-});
+};
 
 //DELETE
   app.delete("/api/notes", function (req, res){
+    notesArray = [];
+    let noteID = req.params.id;
 
+    fs.readFile(outputPath, "utf-8", (err, data) => {
+      if (err) throw err;
+      notesArray = JSON.parse(data);
+
+      const newNotesArray = notesArray.filter(note =>note.id != noteId);
+      fs.writeFile(outputPath, JSON.stringify(newNotesArray) + "\t", err => {
+
+      })
+    })
 
 });
 
 
 
 
-  }
